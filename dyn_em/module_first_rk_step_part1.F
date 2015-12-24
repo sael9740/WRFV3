@@ -135,7 +135,7 @@ CONTAINS
                                       sips , sipe , sjps , sjpe , skps , skpe
 
     !! samms code
-   INTEGER :: start_time , end_time
+   REAL :: start_time , end_time
     !! end samms code
 
    CHARACTER (LEN=256) :: mminlu
