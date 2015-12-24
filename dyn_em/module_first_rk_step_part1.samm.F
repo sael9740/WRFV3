@@ -183,9 +183,9 @@ BENCH_START(init_zero_tend_tim)
 
        END DO
        !$OMP END DO
-       !$OMP SINGLE NOWAIT
+       !$OMP SINGLE
 BENCH_END(init_zero_tend_tim)
-       !$OMP END SINGLE
+       !$OMP END SINGLE NOWAIT
 
 #ifdef DM_PARALLEL
 #     include "HALO_EM_PHYS_A.inc"
