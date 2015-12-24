@@ -134,6 +134,10 @@ CONTAINS
                                       sims , sime , sjms , sjme , skms , skme , &
                                       sips , sipe , sjps , sjpe , skps , skpe
 
+    !! samms code
+   INTEGER :: start_time , end_time
+    !! end samms code
+
    CHARACTER (LEN=256) :: mminlu
    CHARACTER (LEN=1000) :: message
 
@@ -155,6 +159,10 @@ CONTAINS
     rk_step = 1
 
 BENCH_START(init_zero_tend_tim)
+    !! samms code
+       CALL CPU_TIME(start_time)
+    !! end samms code
+
        !$OMP PARALLEL DO   &
        !$OMP PRIVATE ( ij )
 
@@ -217,7 +225,10 @@ BENCH_END(init_zero_tend_tim)
                         k_start, k_end                                   )
       ENDDO
       !$OMP END PARALLEL DO
-
+    !! samms code
+        CALL CPU_TIME(end_time)
+        PRINT*,end_time-start_time
+    !! end samms code
 BENCH_END(phy_prep_tim)
 
 ! radiation
