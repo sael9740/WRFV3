@@ -134,6 +134,10 @@ CONTAINS
                                       sims , sime , sjms , sjme , skms , skme , &
                                       sips , sipe , sjps , sjpe , skps , skpe
 
+    !! samms code
+   REAL :: start_time , end_time
+    !! end samms code
+
    CHARACTER (LEN=256) :: mminlu
    CHARACTER (LEN=1000) :: message
 
@@ -155,9 +159,12 @@ CONTAINS
     rk_step = 1
 
 BENCH_START(init_zero_tend_tim)
-       !$OMP PARALLEL DO   &
-       !$OMP PRIVATE ( ij )
+    !! samms code
+       CALL CPU_TIME(start_time)
+    !! end samms code
 
+       !$OMP PARALLEL PRIVATE(ij)
+       !$OMP DO
        DO ij = 1 , grid%num_tiles
 
          CALL wrf_debug ( 200 , ' call init_zero_tendency' )
@@ -175,15 +182,16 @@ BENCH_START(init_zero_tend_tim)
                                    k_start, k_end                   )
 
        END DO
-       !$OMP END PARALLEL DO
+       !$OMP END DO
+       !$OMP SINGLE NOWAIT
 BENCH_END(init_zero_tend_tim)
+       !$OMP END SINGLE
 
 #ifdef DM_PARALLEL
 #     include "HALO_EM_PHYS_A.inc"
 #endif
 
-      !$OMP PARALLEL DO   &
-      !$OMP PRIVATE ( ij )
+      !$OMP DO
       DO ij = 1 , grid%num_tiles
 
         CALL wrf_debug ( 200 , ' call phy_prep' )
@@ -216,7 +224,13 @@ BENCH_END(init_zero_tend_tim)
                         grid%j_start(ij), grid%j_end(ij),                &
                         k_start, k_end                                   )
       ENDDO
-      !$OMP END PARALLEL DO
+      !$OMP END DO
+      !$OMP END PARALLEL
+
+    !! samms code
+        CALL CPU_TIME(end_time)
+        PRINT*,end_time-start_time
+    !! end samms code
 
 BENCH_END(phy_prep_tim)
 
